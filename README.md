@@ -1,32 +1,45 @@
-# Edge-to-Cloud Automated Fire Mitigation System
+# Auto Flow: Edge-to-Cloud Automated Fire Mitigation System
+**1st Place Winner – HCU Programming Expo**
 
-An Industrial Control System (ICS) prototype that integrates localized hardware in the loop (Raspberry Pi, IR sensors, PWM servos), securely bridged to a public AWS gateway via a reverse SSH tunnel.
+> An Industrial Control System (ICS) prototype integrating hardware-in-the-loop (Raspberry Pi, IR sensors, PWM servos) with a secure public AWS gateway via an encrypted reverse SSH tunnel.
+
+---
+
+<!-- DRAG AND DROP YOUR DEMO MP4 OR GIF HERE -->
+
+---
 
 ## System Architecture
 
-This project is divided into two core engineering pillars:
+The system operates across two core engineering pillars:
 
-1. **Hardware & Edge Computing:** - Raspberry Pi running an object-oriented Python stack. 
-   - Hardware interrupts from active-low Infrared sensors trigger automatic hardware movements via PWM servos.
-2. **Secure Cloud Gateway:** - The local edge device establishes a persistent, encrypted reverse SSH tunnel to an AWS EC2 instance.
-   - The Flask web dashboard is served over the public internet and secured via HTTP Basic Authentication to prevent unauthorized access by automated bot scanners.
+### 1. Hardware & Edge Computing
+* **Local Processing:** Raspberry Pi executing an object-oriented Python 3 daemon.
+* **Interrupt-Driven Actuation:** Active-low hardware interrupts from an Infrared sensor array trigger immediate physical suppression sequences via PWM servos and 5V relays.
+* **Concurrency:** Thread-safe resource locks isolate physical hardware actuation from concurrent web telemetry requests.
+
+### 2. Secure Cloud Gateway
+* **Encrypted Perimeter:** The local edge device establishes a persistent, outbound reverse SSH tunnel to an AWS EC2 instance (Ubuntu), eliminating the need for exposed inbound local ports.
+* **Cloud Dashboard:** A lightweight Flask web dashboard provides remote telemetry and live video streaming (OpenCV / PiCamera2).
+* **Access Control:** HTTP Basic Authentication mitigates automated bot discovery and restricts manual override controls to authenticated operators.
 
 ## Tech Stack
-* **Language:** Python 3 (OOP, Multithreading)
+* **Language & Runtime:** Python 3 (OOP, Multithreading, Thread Locking)
 * **Computer Vision:** OpenCV, PiCamera2
-* **Web Framework:** Flask
-* **Hardware:** RPi.GPIO, gpiozero, PWM Servos, IR Sensors, 5V Relay
-* **Cloud & Networking:** AWS EC2 (Ubuntu), Reverse SSH Tunneling
+* **Web & Ingress:** Flask, Reverse SSH Tunneling
+* **Edge Hardware:** Raspberry Pi, RPi.GPIO, `gpiozero`, Active-Low IR Sensors, PWM Servos, 5V Relay
+* **Cloud Infrastructure:** AWS EC2 (Ubuntu Linux)
 
-## Security Features
-* **Zero-Trust Local Execution:** The system defaults to manual mode and requires explicit user authentication before any hardware controls are exposed.
-* **HTTP Basic Authentication:** Protects the cloud-facing web interface and video stream.
-* **Resource Locking:** Thread-safe hardware locks prevent race conditions between the Flask web server and the autonomous background monitoring daemon.
+## Security Controls
+* **Zero-Trust Default State:** The system boots into a restricted monitoring state; manual hardware overrides are disabled until authenticated.
+* **Inbound Hardening:** The local network requires zero open inbound firewall ports; all cloud communication is tunneled outbound via SSH keys.
+* **Race-Condition Mitigation:** Mutex locks prevent race conditions between asynchronous sensor poll loops and external web socket requests.
 
-## Usage
-*(Note: This project requires specific physical hardware wiring. Do not run this code without configuring the GPIO pins to match your physical layout).*
+## Deployment & Setup
 
-1. Clone the repository.
-2. Install dependencies: `pip install -r requirements.txt`
-3. Run the edge server: `python app.py`
-4. (Optional) Fire a reverse SSH tunnel to your cloud provider to expose the Flask port (5000) externally.
+> **Note:** Requires physical GPIO configuration. Verify pin mappings against your schematic before running.
+
+1. Clone the repository:
+   ```bash
+   git clone [https://github.com/michaelmorelli/Auto-Flow.git](https://github.com/michaelmorelli/Auto-Flow.git)
+   cd Auto-Flow

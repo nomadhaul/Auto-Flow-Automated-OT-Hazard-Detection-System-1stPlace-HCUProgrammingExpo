@@ -3,6 +3,12 @@
 ## Overview
 The Auto Flow Command Center is a lightweight, web-based telemetry and control interface designed for a prototype Industrial Control System (ICS). It provides remote administration for a physical fire-suppression turret, allowing operators to monitor live video feeds, toggle infrared (IR) sensor logic, and manually actuate physical water pumps.
 
+
+
+https://github.com/user-attachments/assets/49b7c399-6c1e-4c03-948c-6cb130cc031f
+
+
+
 ## System Architecture
 * **Backend:** Python (Flask API routing, threading, and hardware GPIO/PWM control)
 * **Computer Vision:** OpenCV (CV2) thermal blob detection via HSV color filtering
